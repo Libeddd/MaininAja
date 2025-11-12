@@ -71,16 +71,15 @@ class LoginScreen extends StatelessWidget {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      // Placeholder untuk Gambar Ilustrasi
-                      // Ganti Icon ini dengan Image.asset('assets/login_illustration.png')
-                      const Icon(
-                        Icons.security_rounded,
-                        size: 150,
-                        color: Color(0xFF1E1E1E),
-                      ),
+                      Image.asset(
+                        'assets/logo_login.png',
+                        width: 250,
+                        height: 250,
+                        fit: BoxFit.contain,
+                        ),
                       const SizedBox(height: 20),
                       const Text(
-                        "MaininAja",
+                        "bitArena",
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
