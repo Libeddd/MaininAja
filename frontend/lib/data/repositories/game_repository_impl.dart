@@ -3,7 +3,7 @@ import 'package:bitArena/data/models/game_model.dart';
 import 'package:bitArena/data/repositories/game_repository.dart';
 
 // INHERITANCE: Mengimplementasikan kontrak GameRepository
-class GameRepositoryImpl implements GameRepository {
+abstract class GameRepositoryImpl implements GameRepository {
   final DioClient _dioClient;
 
   GameRepositoryImpl(this._dioClient);

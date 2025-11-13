@@ -15,7 +15,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   late DateTime _startTime;
-  static const _minDisplayTime = Duration(milliseconds: 3500);
+  static const _minDisplayTime = Duration(milliseconds: 3000);
 
   @override
   void initState() {

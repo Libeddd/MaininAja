@@ -3,21 +3,23 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:bitArena/features/home/widgets/game_card.dart'; // Kita pakai ulang GameCard
 import 'package:bitArena/features/search/bloc/search_bloc.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:bitArena/features/home/widgets/game_card_skeleton.dart';
 
 class SearchScreen extends StatelessWidget {
-  // Kita terima query dari GoRouter
   final String query;
   const SearchScreen({super.key, required this.query});
 
   @override
   Widget build(BuildContext context) {
-    // Panggil BLoC untuk mulai mencari
     context.read<SearchBloc>().add(PerformSearch(query));
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('MaininAja'),
+        title: Text(
+          'bitArena',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+        ),
         backgroundColor: const Color(0xFF1F1F1F),
       ),
 

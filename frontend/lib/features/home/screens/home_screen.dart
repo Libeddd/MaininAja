@@ -7,6 +7,8 @@ import 'package:bitArena/features/home/widgets/home_sidebar_list.dart';
 import 'package:go_router/go_router.dart';
 import 'package:bitArena/app/app_routes.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:bitArena/features/home/widgets/game_card_skeleton.dart';
 import 'package:bitArena/features/home/widgets/home_banner_skeleton.dart';
 import 'package:bitArena/features/home/widgets/home_sidebar_skeleton.dart';
@@ -44,12 +46,55 @@ class _HomeScreenState extends State<HomeScreen> {
     }
   }
 
-  Widget _buildGenreItem(BuildContext context, String genre) {
+  String _getDatesForFilter(String filter) {
+    final now = DateTime.now();
+    String from, to;
+    to = "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
+
+    switch (filter) {
+      case 'last-30-days':
+        final last30 = now.subtract(const Duration(days: 30));
+        from = "${last30.year}-${last30.month.toString().padLeft(2, '0')}-${last30.day.toString().padLeft(2, '0')}";
+        break;
+      case 'this-week':
+        final startOfWeek = now.subtract(Duration(days: now.weekday - 1));
+        from = "${startOfWeek.year}-${startOfWeek.month.toString().padLeft(2, '0')}-${startOfWeek.day.toString().padLeft(2, '0')}";
+        break;
+      case 'next-week':
+        final nextWeek = now.add(const Duration(days: 7));
+        from = to; // Mulai dari hari ini
+        to = "${nextWeek.year}-${nextWeek.month.toString().padLeft(2, '0')}-${nextWeek.day.toString().padLeft(2, '0')}";
+        break;
+      default:
+        from = to;
+    }
+    return "$from,$to";
+  }
+
+  Widget _buildSectionTitle(String title) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16.0, 20.0, 16.0, 8.0),
+      child: Text(
+        title,
+        style: GoogleFonts.poppins(
+          color: Colors.white,
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  // Helper untuk Item Menu (cth: "Home", "PC")
+  Widget _buildMenuItem(BuildContext context, {required IconData icon, required String title}) {
     return ListTile(
-      title: Text(genre, style: const TextStyle(color: Colors.white)),
+      leading: FaIcon(icon, color: Colors.grey[400], size: 20),
+      title: Text(
+        title,
+        style: GoogleFonts.poppins(color: Colors.white, fontSize: 15),
+      ),
       onTap: () {
-        // Filter genre tetap pakai BLoC
-        context.read<HomeBloc>().add(HomeFilterByGenre(genre: genre));
+        // TODO: Tambahkan logika navigasi di sini
         Navigator.pop(context);
       },
     );
@@ -59,30 +104,99 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Games Store'),
-        backgroundColor: const Color(0xFF1F1F1F),
+        title: Text(
+          'bitArena',
+          style: GoogleFonts.poppins(fontWeight: FontWeight.bold),
+        ),
+        // --- BATAS PERBAIKAN ---
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         elevation: 0,
       ),
       drawer: Drawer(
-        backgroundColor: const Color(0xFF1F1F1F),
+        backgroundColor: const Color.fromARGB(255, 0, 0, 0),
         child: ListView(
           padding: EdgeInsets.zero,
           children: [
-            const DrawerHeader(
-              decoration: BoxDecoration(color: Color(0xFF2A2A2A)),
+            DrawerHeader(
+              decoration: const BoxDecoration(color: Color.fromARGB(255, 0, 0, 0)),
               child: Text(
-                'Filter Genre',
-                style: TextStyle(color: Colors.white, fontSize: 20),
+                'bitArena', // Menggunakan judul dari main.dart
+                style: GoogleFonts.poppins(
+                  color: Colors.white,
+                  fontSize: 24,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-            _buildGenreItem(context, 'Action'),
-            _buildGenreItem(context, 'Shooter'),
-            _buildGenreItem(context, 'Adventure'),
-            _buildGenreItem(context, 'RPG'),
-            _buildGenreItem(context, 'Simulation'),
+
+            // --- Section 1: Home, About, Contact ---
+            const _MenuItem(icon: Icons.home_outlined, title: 'Home', filters: {}), // Tanpa filter
+            const _MenuItem(icon: Icons.info_outline, title: 'About', filters: {}), // Tanpa filter
+            const _MenuItem(icon: Icons.mail_outline, title: 'Contact', filters: {}), // Tanpa filter
+            
+            const Divider(color: Colors.black26),
+
+            // --- Section 2: New Releases ---
+            _buildSectionTitle('New Releases'),
+            _MenuItem(
+              icon: Icons.star_outline,
+              title: 'Last 30 Days',
+              filters: {'dates': _getDatesForFilter('last-30-days')},
+            ),
+            _MenuItem(
+              icon: Icons.watch_later_outlined,
+              title: 'This Week',
+              filters: {'dates': _getDatesForFilter('this-week')},
+            ),
+            _MenuItem(
+              icon: Icons.fast_forward_outlined,
+              title: 'Next Week',
+              filters: {'dates': _getDatesForFilter('next-week')},
+            ),
+
+            const Divider(color: Colors.black26),
+
+            // --- Section 3: Platforms ---
+            _buildSectionTitle('Platforms'),
+            // ID Platform dari API RAWG: 4 = PC, 18 = PS4, 1 = Xbox One
+            const _MenuItem(icon: FontAwesomeIcons.windows, title: 'PC', filters: {'platforms': '4'}),
+            const _MenuItem(icon: FontAwesomeIcons.playstation, title: 'Playstation 4', filters: {'platforms': '18'}),
+            const _MenuItem(icon: FontAwesomeIcons.xbox, title: 'Xbox One', filters: {'platforms': '1'}),
+
+            const Divider(color: Colors.black26),
+
+            // --- Section 4: Genres ---
+            _buildSectionTitle('Genres'),
+            // Kita panggil _MenuItem, sama seperti Platforms
+            _MenuItem(
+              icon: FontAwesomeIcons.bomb, // Ikon untuk Action
+              title: 'Action',
+              filters: {'genres': 'action'},
+            ),
+            _MenuItem(
+              icon: FontAwesomeIcons.crosshairs, // Ikon untuk Shooter
+              title: 'Shooter',
+              filters: {'genres': 'shooter'},
+            ),
+            _MenuItem(
+              icon: FontAwesomeIcons.mapLocationDot, // Ikon untuk Adventure
+              title: 'Adventure',
+              filters: {'genres': 'adventure'},
+            ),
+            _MenuItem(
+              icon: FontAwesomeIcons.shieldHalved, // Ikon untuk RPG
+              title: 'RPG',
+              filters: {'genres': 'role-playing-games-rpg'},
+            ),
+            _MenuItem(
+              icon: FontAwesomeIcons.car, // Ikon untuk Simulation
+              title: 'Simulation',
+              filters: {'genres': 'simulation'},
+            ),
           ],
         ),
       ),
+
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -272,6 +386,66 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class _MenuItem extends StatefulWidget {
+  final IconData icon;
+  final String title;
+  final Map<String, dynamic> filters;
+
+  const _MenuItem({
+    required this.icon,
+    required this.title,
+    required this.filters,
+  });
+
+  @override
+  State<_MenuItem> createState() => _MenuItemState();
+}
+
+class _MenuItemState extends State<_MenuItem> {
+  bool _isHovered = false;
+
+ @override
+  Widget build(BuildContext context) {
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      cursor: SystemMouseCursors.click,
+      
+      child: ListTile(
+        leading: FaIcon(
+          widget.icon,
+          color: _isHovered ? Colors.white : Colors.grey[400],
+          size: 20,
+        ),
+        title: Text(
+          widget.title,
+          style: GoogleFonts.poppins(color: Colors.white, fontSize: 15),
+        ),
+        onTap: () {
+          if (widget.filters.isEmpty) {
+            Navigator.pop(context);
+            return;
+          }
+
+          String pageTitle = widget.title;
+          if (widget.filters.containsKey('platforms') || widget.filters.containsKey('genres')) {
+            pageTitle = '${widget.title} Games';
+          }
+          
+          context.pushNamed(
+            AppRoutes.browse,
+            queryParameters: {
+              'title': pageTitle, // Kirim judul
+              ...widget.filters,      // Kirim filter
+            },
+          );
+          Navigator.pop(context);
+        },
       ),
     );
   }
