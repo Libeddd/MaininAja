@@ -9,6 +9,7 @@ import 'package:bitArena/features/auth/cubit/auth_cubit.dart';
 import 'package:bitArena/features/detail/cubit/detail_cubit.dart';
 import 'package:bitArena/features/home/bloc/home_bloc.dart';
 import 'package:bitArena/features/search/bloc/search_bloc.dart';
+import 'package:bitArena/features/browse/bloc/browse_bloc.dart';
 import 'package:flutter_web_plugins/url_strategy.dart';
 
 void main() {
@@ -50,6 +51,12 @@ class MyApp extends StatelessWidget {
 
           BlocProvider<SearchBloc>(
             create: (context) => SearchBloc(
+              context.read<GameRepository>(),
+            ),
+          ),
+
+        BlocProvider<BrowseBloc>(
+            create: (context) => BrowseBloc(
               context.read<GameRepository>(),
             ),
           ),

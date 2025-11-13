@@ -143,9 +143,9 @@ class LoginScreen extends StatelessWidget {
                             children: [
                               const Text("Password strength", style: TextStyle(color: Colors.grey, fontSize: 12)),
                               const SizedBox(width: 10),
-                              Container(width: 40, height: 4, color: kAccentYellow), // Indikator kuning
+                              Container(width: 40, height: 4, color: Colors.white), // Indikator kuning
                               const SizedBox(width: 5),
-                              Container(width: 40, height: 4, color: kAccentYellow),
+                              Container(width: 40, height: 4, color: Colors.white),
                               const SizedBox(width: 5),
                               Container(width: 40, height: 4, color: Colors.grey[800]),
                             ],
@@ -159,7 +159,7 @@ class LoginScreen extends StatelessWidget {
                               Expanded(
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(
-                                    backgroundColor: kAccentYellow,
+                                    backgroundColor: Colors.white,
                                     foregroundColor: Colors.black,
                                     shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(30),

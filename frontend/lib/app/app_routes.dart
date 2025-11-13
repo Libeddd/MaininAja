@@ -2,13 +2,13 @@
 
 import 'package:go_router/go_router.dart';
 import 'package:flutter/material.dart';
-
-// Impor semua file 'screen' Anda
 import 'package:bitArena/features/splash/splash_screen.dart';
 import 'package:bitArena/features/auth/screens/login_screen.dart';
 import 'package:bitArena/features/home/screens/home_screen.dart';
 import 'package:bitArena/features/detail/screens/detail_screen.dart';
 import 'package:bitArena/features/search/screens/search_screen.dart';
+import 'package:bitArena/features/search/screens/search_screen.dart';
+import 'package:bitArena/features/browse/screens/browse_screen.dart';
 
 
 class AppRoutes {
@@ -17,6 +17,7 @@ class AppRoutes {
   static const String home = '/home';
   static const String detail = '/detail';
   static const String search = '/search';
+  static const String browse = '/browse';
 
 
   static final GoRouter router = GoRouter(
@@ -51,6 +52,24 @@ class AppRoutes {
         builder: (context, state) {
           final String query = state.pathParameters['query'] ?? '';
           return SearchScreen(query: query);
+        },
+      ),
+      GoRoute(
+        // Rute ini akan menerima query params
+        // Cth: /browse?title=PC&platforms=4
+        path: browse,
+        name: browse,
+        builder: (context, state) {
+          // Ambil judul dari query param
+          final String title = state.uri.queryParameters['title'] ?? 'Browse';
+          // Ambil semua filter lain
+          final filters = Map<String, dynamic>.from(state.uri.queryParameters);
+          filters.remove('title'); // Hapus title dari filter
+
+          return BrowseScreen(
+            title: title,
+            filters: filters,
+          );
         },
       ),
     ],

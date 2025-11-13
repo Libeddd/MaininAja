@@ -94,7 +94,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     on<HomeFetchList>(_onFetchHomeList);
     on<HomeFetchMoreGames>(_onFetchMoreGames);
     on<HomeSearchGames>(_onSearchGames);
-    on<HomeFilterByGenre>(_onFilterByGenre);
   }
 
   Future<void> _onFetchHomeList(
@@ -153,20 +152,6 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     try {
       // Pastikan Anda memanggil event.query di sini
       final games = await _gameRepository.searchGames(query: event.query);
-      emit(HomeSuccess(games: games, currentPage: 1, hasReachedMax: true));
-    } catch (e) {
-      emit(HomeError(e.toString()));
-    }
-  }
-
-  Future<void> _onFilterByGenre(
-    HomeFilterByGenre event,
-    Emitter<HomeState> emit,
-  ) async {
-    emit(HomeLoading());
-    try {
-      // DIPERBAIKI: Menambahkan "genre:"
-      final games = await _gameRepository.getGamesByGenre(genre: event.genre);
       emit(HomeSuccess(games: games, currentPage: 1, hasReachedMax: true));
     } catch (e) {
       emit(HomeError(e.toString()));

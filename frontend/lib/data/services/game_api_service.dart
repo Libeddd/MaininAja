@@ -53,18 +53,12 @@ class GameApiService implements GameRepository {
 
   // --- FUNGSI INI DIPERBAIKI AGAR SESUAI KONTRAK ---
   @override
-  Future<List<GameModel>> getGamesByGenre({
-    required String genre,
-    int page = 1, // Parameter 'page' ditambahkan
-  }) async {
+  Future<List<GameModel>> getFilteredGames(Map<String, dynamic> filters) async {
     try {
+      // Kita teruskan 'filters' sebagai queryParameters
       final response = await _dioClient.get(
         'games',
-        // API RAWG menggunakan 'genres' untuk filter
-        queryParameters: {
-          'genres': genre.toLowerCase(),
-          'page': page, // 'page' dikirim ke API
-        },
+        queryParameters: filters,
       );
       final List results = response.data['results'] as List;
       return results.map((game) => GameModel.fromJson(game)).toList();
