@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:bitArena/app/app_routes.dart';
 import 'package:bitArena/features/auth/cubit/auth_cubit.dart';
 import 'package:bitArena/features/auth/cubit/auth_state.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -14,7 +15,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   late DateTime _startTime;
-  static const _minDisplayTime = Duration(milliseconds: 2500); // 2.5 detik
+  static const _minDisplayTime = Duration(milliseconds: 3500);
 
   @override
   void initState() {
@@ -48,19 +49,29 @@ class _SplashScreenState extends State<SplashScreen> {
       child: Scaffold(
         // Menggunakan Container untuk background hitam solid
         body: Container(
-          // --- PERUBAHAN DI SINI ---
           decoration: const BoxDecoration(
-            color: Colors.black, // Warna latar belakang diubah menjadi hitam solid
+            color: Colors.black,
           ),
           child: Center(
-            // Sekarang hanya ada logo di dalam Center
-            child: Image.asset(
-              'assets/logo.png',
-              width: 250,
-              height: 250,
-              fit: BoxFit.contain,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                // 1. Logo Anda
+                Image.asset(
+                  'assets/logo.png',
+                  width: 250,
+                  height: 250,
+                  fit: BoxFit.contain,
+                ),
+                // 2. Spasi antara logo dan loader
+                const SizedBox(height: 30),
+                // 3. Widget animasi loading
+                LoadingAnimationWidget.hexagonDots(
+                  color: Colors.white,
+                  size: 50,
+                ),
+              ],
             ),
-            // Widget Column, SizedBox, dan Text sudah dihapus
           ),
         ),
       ),
