@@ -19,6 +19,9 @@ class AppRoutes {
   static const String detail = '/detail';
   static const String search = '/search';
   static const String browse = '/browse';
+  static const about = "/about";
+  static const contact = "/contact";
+
 
 
   static final GoRouter router = GoRouter(
