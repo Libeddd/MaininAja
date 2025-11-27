@@ -47,7 +47,7 @@ class AppRoutes {
 
       GoRoute(
         path: aboutUs,
-        name: 'aboutUs', 
+        name: aboutUs, 
         builder: (context, state) => const AboutUsScreen(),
       ),
 

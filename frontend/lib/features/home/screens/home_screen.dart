@@ -15,6 +15,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:bitarena/features/auth/cubit/auth_cubit.dart';
+import 'dart:ui'; // Wajib untuk scroll desktop
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -63,7 +64,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
   }
 
-  // Helper untuk mendapatkan rentang tanggal bulan (1-12)
   String _getDateRangeForMonth(int monthIndex) {
     final now = DateTime.now();
     final year = now.year;
@@ -79,6 +79,12 @@ class _HomeScreenState extends State<HomeScreen> {
     final nextWeekStart = now.add(const Duration(days: 7));
     final nextWeekEnd = now.add(const Duration(days: 14));
     final currentYear = now.year;
+
+    // Variabel Responsif
+    final screenWidth = MediaQuery.of(context).size.width;
+    final bool isDesktop = screenWidth > 800;
+    final double cardWidth = isDesktop ? 280 : 200;
+    final double cardHeight = isDesktop ? 380 : 290;
 
     return Scaffold(
       appBar: AppBar(
@@ -122,12 +128,16 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
 
             const _MenuItem(icon: Icons.home_outlined, title: 'Home', filters: {}),
+            
+            // MY WISHLIST
             ListTile(
               leading: const Icon(Icons.favorite_outline, color: Colors.grey, size: 20),
               title: Text('My Wishlist', style: GoogleFonts.poppins(color: Colors.white, fontSize: 15)),
               onTap: () { Navigator.pop(context); context.pushNamed(AppRoutes.wishlist); },
             ),
 
+            // ABOUT (DI BAWAH WISHLIST)
+            const _MenuItem(icon: Icons.info_outline, title: 'About', filters: {}),
             const Divider(color: Colors.white10, thickness: 1),
 
             // --- NEW RELEASES ---
@@ -136,33 +146,24 @@ class _HomeScreenState extends State<HomeScreen> {
             _MenuItem(icon: Icons.local_fire_department, title: 'This week', filters: {'dates': "${_formatDate(now.subtract(const Duration(days: 7)))},${_formatDate(now.add(const Duration(days: 7)))}", 'ordering': '-added'}),
             _MenuItem(icon: Icons.fast_forward, title: 'Next week', filters: {'dates': "${_formatDate(nextWeekStart)},${_formatDate(nextWeekEnd)}", 'ordering': '-added'}),
             
-            // --- RELEASE CALENDAR (LANGSUNG KE BULAN INI) ---
+            // RELEASE CALENDAR
             ListTile(
               leading: const Icon(Icons.calendar_month, color: Colors.grey, size: 20),
               title: Text('Release calendar', style: GoogleFonts.poppins(color: Colors.white, fontSize: 15)),
               onTap: () {
                 Navigator.pop(context);
-                
-                // Logika: Ambil Bulan Saat Ini
                 final DateTime now = DateTime.now();
-                final int currentMonthIndex = now.month - 1; // 0 = Jan, 10 = Nov
-                
-                // Nama Bulan Lengkap untuk Title Awal
-                const List<String> fullMonths = [
-                  'January', 'February', 'March', 'April', 'May', 'June', 
-                  'July', 'August', 'September', 'October', 'November', 'December'
-                ];
+                final int currentMonthIndex = now.month - 1; 
+                const List<String> fullMonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
                 final String currentMonthName = fullMonths[currentMonthIndex];
 
                 context.pushNamed(
                   AppRoutes.browse,
                   queryParameters: {
                     'title': 'Release calendar - $currentMonthName ${now.year}',
-                    // Filter otomatis set ke tanggal 1 - akhir bulan ini
                     'dates': _getDateRangeForMonth(now.month), 
                     'ordering': 'released',
                     'show_calendar': 'true',
-                    // Kirim index bulan ini agar tombol bulan terpilih otomatis
                     'initial_index': currentMonthIndex.toString(),
                   },
                 );
@@ -265,6 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  // BANNER
                   BlocBuilder<HomeBloc, HomeState>(
                     builder: (context, state) {
                       if (state is HomeLoading || state is HomeInitial) {
@@ -278,6 +280,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
 
+                  // FEATURED GAMES (HORIZONTAL)
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text('Featured Games', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
@@ -286,26 +289,31 @@ class _HomeScreenState extends State<HomeScreen> {
                     builder: (context, state) {
                       if (state is HomeLoading || state is HomeInitial) {
                         return SizedBox(
-                          height: 300,
+                          height: cardHeight,
                           child: ListView.separated(
                             scrollDirection: Axis.horizontal,
                             padding: const EdgeInsets.symmetric(horizontal: 16.0),
                             itemCount: 7,
                             separatorBuilder: (context, index) => const SizedBox(width: 16),
-                            itemBuilder: (context, index) => const SizedBox(width: 200, child: GameCardSkeleton()),
+                            itemBuilder: (context, index) => SizedBox(width: cardWidth, child: const GameCardSkeleton()),
                           ),
                         );
                       }
                       if (state is HomeSuccess) {
                         final featuredGames = state.games.skip(5).take(7).toList();
                         return SizedBox(
-                          height: 300,
-                          child: ListView.separated(
-                            scrollDirection: Axis.horizontal,
-                            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                            itemCount: featuredGames.length,
-                            separatorBuilder: (context, index) => const SizedBox(width: 16),
-                            itemBuilder: (context, index) => SizedBox(width: 200, child: GameCard(game: featuredGames[index])),
+                          height: cardHeight,
+                          child: ScrollConfiguration(
+                            behavior: ScrollConfiguration.of(context).copyWith(
+                              dragDevices: {PointerDeviceKind.touch, PointerDeviceKind.mouse},
+                            ),
+                            child: ListView.separated(
+                              scrollDirection: Axis.horizontal,
+                              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                              itemCount: featuredGames.length,
+                              separatorBuilder: (context, index) => const SizedBox(width: 16),
+                              itemBuilder: (context, index) => SizedBox(width: cardWidth, child: GameCard(game: featuredGames[index])),
+                            ),
                           ),
                         );
                       }
@@ -313,6 +321,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     },
                   ),
 
+                  // ALL GAMES (GRID)
                   Padding(
                     padding: const EdgeInsets.all(16.0),
                     child: Text('All Games', style: Theme.of(context).textTheme.headlineSmall?.copyWith(fontWeight: FontWeight.bold)),
@@ -324,7 +333,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           baseColor: Colors.grey[850]!, highlightColor: Colors.grey[700]!,
                           child: GridView.builder(
                             padding: const EdgeInsets.symmetric(horizontal: 16.0), physics: const NeverScrollableScrollPhysics(), shrinkWrap: true,
-                            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 400, childAspectRatio: 1.0, crossAxisSpacing: 16, mainAxisSpacing: 16),
+                            gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 400, childAspectRatio: 0.9, crossAxisSpacing: 16, mainAxisSpacing: 16),
                             itemCount: 6, itemBuilder: (context, index) => const HomeCardSkeleton(),
                           ),
                         );
@@ -332,15 +341,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       if (state is HomeError) return Center(child: Text('Failed to load games: ${state.message}'));
                       if (state is HomeSuccess) {
                         if (state.games.isEmpty) return const Center(child: Text('No games found.'));
-                        
-                        // Skip 5 (Banner) + 7 (Featured) = 12
-                        final gridGames = state.games.skip(12).toList(); 
-                        
+                        final gridGames = state.games.skip(12).toList();
                         return Column(
                           children: [
                             GridView.builder(
                               padding: const EdgeInsets.symmetric(horizontal: 16.0), physics: const NeverScrollableScrollPhysics(), shrinkWrap: true,
-                              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 400, childAspectRatio: 1.0, crossAxisSpacing: 16, mainAxisSpacing: 16),
+                              gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(maxCrossAxisExtent: 400, childAspectRatio: 0.9, crossAxisSpacing: 16, mainAxisSpacing: 16),
                               itemCount: gridGames.length, itemBuilder: (context, index) => HomeCard(game: gridGames[index]),
                             ),
                             if (state.isLoadingMore && !state.hasReachedMax)
@@ -416,6 +422,14 @@ class _MenuItemState extends State<_MenuItem> {
         leading: FaIcon(widget.icon, color: _isHovered ? Colors.white : Colors.grey[400], size: 20),
         title: Text(widget.title, style: GoogleFonts.poppins(color: Colors.white, fontSize: 15)),
         onTap: () {
+          // --- FIX NAVIGASI ABOUT DI SINI ---
+          if (widget.title == 'About') {
+            Navigator.pop(context);
+            context.pushNamed(AppRoutes.aboutUs);
+            return;
+          }
+          // ----------------------------------
+
           if (widget.filters.isEmpty) {
             Navigator.pop(context);
             return;
