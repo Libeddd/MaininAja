@@ -13,18 +13,17 @@ class AboutUsScreen extends StatefulWidget {
 class _AboutUsScreenState extends State<AboutUsScreen> {
   bool _isExpanded = false;
 
-  // --- DATA ANGGOTA TIM (9 ORANG) ---
   final List<Map<String, String>> _teamMembers = const [
     {
-      'name': 'Alex Wijaya',
+      'name': 'Mochammad Abid Sunaryo',
       'role': 'Chief Executive Officer',
       'image': 'assets/team_member_1.png',
       'github': 'https://github.com/alexwijaya',
       'instagram': 'https://instagram.com/alexwijaya',
     },
     {
-      'name': 'Sarah Putri',
-      'role': 'Product Manager',
+      'name': 'Gofur Aryan Nur Karim',
+      'role': 'Chief Executive Officer',
       'image': 'assets/team_member_2.png',
       'github': 'https://github.com/sarahputri',
       'instagram': 'https://instagram.com/sarahputri',
