@@ -1,41 +1,23 @@
-// File: lib/features/home/widgets/home_banner_carousel.dart (REVISI)
+// File: lib/features/home/widgets/home_banner_carousel.dart (FINAL REVISI)
 
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider/carousel_slider.dart'; // Dipertahankan untuk CarouselOptions (jika dibutuhkan di masa depan)
 import 'package:bitarena/data/models/game_model.dart'; 
 import 'package:flutter/material.dart' hide CarouselController;
 import 'package:go_router/go_router.dart';
 import 'package:bitarena/app/app_routes.dart'; 
 
-class HomeBannerCarousel extends StatelessWidget {
-  final List<GameModel> games;
-  final double height; 
+// Hapus widget HomeBannerCarousel, karena tidak lagi digunakan sebagai carousel
+// dan kita akan menggunakan widget MainBannerCard dan SmallBannerList secara langsung.
 
-  const HomeBannerCarousel({
-    super.key, 
-    required this.games,
-    this.height = 400.0, // Default disamakan dengan HomeScreen
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    // Diganti dari CarouselSlider.builder menjadi IndexedStack
-    // karena hanya akan menampilkan 1 banner utama saja (tidak carousel)
-    // dan dipanggil di bagian utama (kiri)
-    if (games.isEmpty) return const SizedBox.shrink();
-
-    // Ambil game pertama untuk banner utama
-    final game = games.first; 
-    return _MainBannerCard(game: game, height: height);
-  }
-}
-
-// Widget baru untuk Banner Utama Kiri
-class _MainBannerCard extends StatelessWidget {
+// Widget yang sudah diubah namanya menjadi public (menghapus underscore)
+class MainBannerCard extends StatelessWidget {
   final GameModel game;
   final double height;
-  const _MainBannerCard({required this.game, required this.height});
+  
+  // Ubah key agar sesuai dengan penggunaan di home_screen.dart
+  const MainBannerCard({super.key, required this.game, required this.height}); 
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +30,7 @@ class _MainBannerCard extends StatelessWidget {
         child: SizedBox(
           height: height,
           child: ClipRRect(
-            borderRadius: BorderRadius.zero,
+            borderRadius: BorderRadius.circular(8.0), // Tambahkan radius agar sesuai dengan gambar
             child: Stack(
               fit: StackFit.expand,
               children: [
@@ -63,7 +45,7 @@ class _MainBannerCard extends StatelessWidget {
                 Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
-                      begin: Alignment.bottomCenter, // Ubah gradien dari bawah
+                      begin: Alignment.bottomCenter, 
                       end: Alignment.topCenter,
                       colors: [
                         Colors.black.withOpacity(0.8),
@@ -83,13 +65,12 @@ class _MainBannerCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        game.name, // Huruf besar dihilangkan
+                        game.name, 
                         style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
                             ),
                       ),
-                      // Subtitle dan Tombol dihilangkan
                     ],
                   ),
                 ),
@@ -102,10 +83,10 @@ class _MainBannerCard extends StatelessWidget {
   }
 }
 
-// Widget baru untuk daftar game kecil di sebelah kanan
-class _SmallBannerCard extends StatelessWidget {
+// Widget baru untuk daftar game kecil di sebelah kanan (Diubah namanya menjadi public)
+class SmallBannerCard extends StatelessWidget {
   final GameModel game;
-  const _SmallBannerCard({required this.game});
+  const SmallBannerCard({super.key, required this.game});
 
   @override
   Widget build(BuildContext context) {
@@ -116,10 +97,10 @@ class _SmallBannerCard extends StatelessWidget {
           context.push('${AppRoutes.detail}/${game.id}');
         },
         child: Container(
-          height: 151, // Sesuaikan tinggi per item
-          margin: const EdgeInsets.only(bottom: 23.0), // Spasi antar item
+          height: 128, // Sesuaikan tinggi sedikit agar 3 item pas 400px (128*3 + 8*2 = 400)
+          margin: const EdgeInsets.only(bottom: 8.0), 
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(8.0), // Tambahkan sedikit border radius
+            borderRadius: BorderRadius.circular(8.0), 
             child: Stack(
               fit: StackFit.expand,
               children: [
@@ -130,7 +111,7 @@ class _SmallBannerCard extends StatelessWidget {
                   placeholder: (context, url) => Container(color: Colors.grey[900]),
                 ),
                 
-                // 2. Gradient Gelap (untuk memastikan teks terbaca)
+                // 2. Gradient Gelap 
                 Container(
                   decoration: BoxDecoration(
                     gradient: LinearGradient(
@@ -183,9 +164,13 @@ class SmallBannerList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Karena kita hanya ingin menampilkan 3, pastikan listnya hanya 3.
+    final List<GameModel> top3Games = games.take(3).toList();
+    
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: games.map((game) => _SmallBannerCard(game: game)).toList(),
+      // Menggunakan SmallBannerCard (yang sudah public)
+      children: top3Games.map((game) => SmallBannerCard(game: game)).toList(),
     );
   }
 }
