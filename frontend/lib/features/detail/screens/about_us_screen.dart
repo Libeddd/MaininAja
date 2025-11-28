@@ -13,6 +13,9 @@ class AboutUsScreen extends StatefulWidget {
 class _AboutUsScreenState extends State<AboutUsScreen> {
   bool _isExpanded = false;
 
+  // Konstanta untuk Lebar Maksimum Konten (Desktop)
+  static const double kMaxWidth = 1000.0; 
+
   final List<Map<String, String>> _teamMembers = const [
     {
       'name': 'Mochammad Abid Sunaryo',
@@ -25,15 +28,15 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
       'name': 'Gofur Aryan Nur Karim',
       'role': 'Chief Executive Officer',
       'image': 'assets/team_member_2.png',
-      'github': 'https://github.com/sarahputri',
-      'instagram': 'https://instagram.com/sarahputri',
+      'github': 'https://github.com/Gofurryan',
+      'instagram': 'https://instagram.com/gfryann',
     },
     {
-      'name': 'Budi Santoso',
-      'role': 'Lead Backend Engineer',
+      'name': 'Gilang Kelvin Saputra',
+      'role': 'Lead Frontend Engineer',
       'image': 'assets/team_member_3.png',
-      'github': 'https://github.com/budisantoso',
-      'instagram': 'https://instagram.com/budisantoso',
+      'github': 'https://github.com/vsarutobi',
+      'instagram': 'https://instagram.com/gilangkelv',
     },
     {
       'name': 'Dina Kusuma',
@@ -81,6 +84,11 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // Mendapatkan lebar layar saat ini
+    final screenWidth = MediaQuery.of(context).size.width;
+    // Menentukan jumlah kolom GridView berdasarkan lebar layar
+    final crossAxisCount = screenWidth > 900 ? 4 : (screenWidth > 600 ? 3 : 2);
+    
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -95,154 +103,159 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
         ),
       ),
       backgroundColor: const Color(0xFF121212),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // --- 1. DESKRIPSI PROJECT (NARRATIVE) ---
-            Text(
-              'The bitArena Story',
-              style: GoogleFonts.poppins(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-            const SizedBox(height: 16),
-            
-            // Paragraf 1: Pengenalan & Misi (Selalu Ditampilkan)
-            Text(
-              'Selamat datang di bitArena, gerbang utama Anda menuju dunia hiburan digital tanpa batas. Dibangun dengan teknologi Flutter terbaru dan ditenagai oleh performa handal, bitArena bukan sekadar katalog game—ini adalah ekosistem yang dirancang untuk para pencinta game lintas platform.',
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                color: Colors.grey[400],
-                height: 1.6,
-              ),
-              textAlign: TextAlign.justify,
-            ),
-            
-            // --- KONTEN EXPANDABLE (Show More) ---
-            if (_isExpanded) ...[
-              const SizedBox(height: 12),
-              // Paragraf 2: Fitur Teknis & Keunggulan
-              Text(
-                'Kami memahami betapa sulitnya menemukan game yang tepat di tengah lautan pilihan. Oleh karena itu, kami menghadirkan fitur pencarian cerdas, filter genre yang mendalam, dan kategori platform spesifik (PC, PlayStation, Xbox) untuk memastikan Anda menemukan petualangan berikutnya dengan mudah. Dengan antarmuka yang responsif dan integrasi data real-time, kami berkomitmen menyajikan informasi akurat dan pengalaman pengguna yang mulus.',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color: Colors.grey[400],
-                  height: 1.6,
+      body: Center( // CENTER KONTEN UTAMA
+        child: ConstrainedBox( // BATAS LEBAR MAKSIMUM
+          constraints: const BoxConstraints(maxWidth: kMaxWidth),
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // --- 1. DESKRIPSI PROJECT (NARRATIVE) ---
+                Text(
+                  'The bitArena Story',
+                  style: GoogleFonts.poppins(
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
                 ),
-                textAlign: TextAlign.justify,
-              ),
-              const SizedBox(height: 12),
-              // Paragraf 3: Visi Tim
-              Text(
-                'bitArena lahir dari passion kami terhadap kode dan gaming. Kami percaya bahwa teknologi harus mempermudah hobi Anda, bukan mempersulitnya. Terus mainkan, terus jelajahi, dan biarkan bitArena menjadi panduan Anda.',
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  color: Colors.grey[400],
-                  height: 1.6,
-                  fontStyle: FontStyle.italic,
+                const SizedBox(height: 16),
+                
+                // Paragraf 1: Pengenalan & Misi (Selalu Ditampilkan)
+                Text(
+                  'Selamat datang di bitArena, gerbang utama Anda menuju dunia hiburan digital tanpa batas. Dibangun dengan teknologi Flutter terbaru dan ditenagai oleh performa handal, bitArena bukan sekadar katalog game—ini adalah ekosistem yang dirancang untuk para pencinta game lintas platform.',
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    color: Colors.grey[400],
+                    height: 1.6,
+                  ),
+                  textAlign: TextAlign.justify,
                 ),
-                textAlign: TextAlign.justify,
-              ),
-            ],
-
-            // --- TOMBOL TOGGLE SHOW MORE / LESS ---
-            const SizedBox(height: 8),
-            GestureDetector(
-              onTap: () {
-                setState(() {
-                  _isExpanded = !_isExpanded;
-                });
-              },
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
+                
+                // --- KONTEN EXPANDABLE (Show More) ---
+                if (_isExpanded) ...[
+                  const SizedBox(height: 12),
+                  // Paragraf 2: Fitur Teknis & Keunggulan
                   Text(
-                    _isExpanded ? "Sembunyikan" : "Lihat Selengkapnya",
-                    style: GoogleFonts.poppins(
-                      color: Colors.blueAccent,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 14,
-                    ),
-                  ),
-                  const SizedBox(width: 4),
-                  Icon(
-                    _isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
-                    color: Colors.blueAccent,
-                    size: 20,
-                  ),
-                ],
-              ),
-            ),
-            
-            const SizedBox(height: 30),
-            const Divider(color: Colors.white24, thickness: 1),
-            const SizedBox(height: 30),
-
-            // --- 2. MEET OUR TEAM SECTION ---
-            Center(
-              child: Column(
-                children: [
-                  Text(
-                    'Meet The Squad',
-                    style: GoogleFonts.poppins(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Orang-orang hebat di balik layar',
+                    'Kami memahami betapa sulitnya menemukan game yang tepat di tengah lautan pilihan. Oleh karena itu, kami menghadirkan fitur pencarian cerdas, filter genre yang mendalam, dan kategori platform spesifik (PC, PlayStation, Xbox) untuk memastikan Anda menemukan petualangan berikutnya dengan mudah. Dengan antarmuka yang responsif dan integrasi data real-time, kami berkomitmen menyajikan informasi akurat dan pengalaman pengguna yang mulus.',
                     style: GoogleFonts.poppins(
                       fontSize: 14,
-                      color: Colors.grey[500],
+                      color: Colors.grey[400],
+                      height: 1.6,
                     ),
+                    textAlign: TextAlign.justify,
+                  ),
+                  const SizedBox(height: 12),
+                  // Paragraf 3: Visi Tim
+                  Text(
+                    'bitArena lahir dari passion kami terhadap kode dan gaming. Kami percaya bahwa teknologi harus mempermudah hobi Anda, bukan mempersulitnya. Terus mainkan, terus jelajahi, dan biarkan bitArena menjadi panduan Anda.',
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      color: Colors.grey[400],
+                      height: 1.6,
+                      fontStyle: FontStyle.italic,
+                    ),
+                    textAlign: TextAlign.justify,
                   ),
                 ],
-              ),
-            ),
-            const SizedBox(height: 24),
 
-            // Grid untuk Kartu Tim (Builder untuk 9 item)
-            GridView.builder(
-              shrinkWrap: true,
-              physics: const NeverScrollableScrollPhysics(),
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2, 
-                childAspectRatio: 0.8,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-              ),
-              itemCount: _teamMembers.length,
-              itemBuilder: (context, index) {
-                final member = _teamMembers[index];
-                return TeamMemberCard(
-                  name: member['name']!,
-                  role: member['role']!,
-                  imagePath: member['image']!,
-                  githubUrl: member['github']!,
-                  instagramUrl: member['instagram']!,
-                );
-              },
-            ),
-            
-            // Copyright footer kecil
-            const SizedBox(height: 40),
-            Center(
-              child: Text(
-                '© 2024 bitArena Team. All rights reserved.',
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  color: Colors.grey[600],
+                // --- TOMBOL TOGGLE SHOW MORE / LESS ---
+                const SizedBox(height: 8),
+                GestureDetector(
+                  onTap: () {
+                    setState(() {
+                      _isExpanded = !_isExpanded;
+                    });
+                  },
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        _isExpanded ? "Sembunyikan" : "Lihat Selengkapnya",
+                        style: GoogleFonts.poppins(
+                          color: Colors.blueAccent,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
+                        ),
+                      ),
+                      const SizedBox(width: 4),
+                      Icon(
+                        _isExpanded ? Icons.keyboard_arrow_up : Icons.keyboard_arrow_down,
+                        color: Colors.blueAccent,
+                        size: 20,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
+                
+                const SizedBox(height: 30),
+                const Divider(color: Colors.white24, thickness: 1),
+                const SizedBox(height: 30),
+
+                // --- 2. MEET OUR TEAM SECTION ---
+                Center(
+                  child: Column(
+                    children: [
+                      Text(
+                        'Meet The Squad',
+                        style: GoogleFonts.poppins(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        'Orang-orang hebat di balik layar',
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          color: Colors.grey[500],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 24),
+
+                // Grid untuk Kartu Tim (Builder untuk 9 item)
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: crossAxisCount, // Variabel responsif
+                    childAspectRatio: 0.8,
+                    mainAxisSpacing: 16,
+                    crossAxisSpacing: 16,
+                  ),
+                  itemCount: _teamMembers.length,
+                  itemBuilder: (context, index) {
+                    final member = _teamMembers[index];
+                    return TeamMemberCard(
+                      name: member['name']!,
+                      role: member['role']!,
+                      imagePath: member['image']!,
+                      githubUrl: member['github']!,
+                      instagramUrl: member['instagram']!,
+                    );
+                  },
+                ),
+                
+                // Copyright footer kecil
+                const SizedBox(height: 40),
+                Center(
+                  child: Text(
+                    '© 2025 bitArena Team. All rights reserved.',
+                    style: GoogleFonts.poppins(
+                      fontSize: 12,
+                      color: Colors.grey[600],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+              ],
             ),
-            const SizedBox(height: 20),
-          ],
+          ),
         ),
       ),
     );
