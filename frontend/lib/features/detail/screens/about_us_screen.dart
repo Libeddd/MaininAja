@@ -74,11 +74,11 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
       'instagram': 'https://instagram.com/haniifah',
     },
     {
-      'name': 'Indra Lesmana',
+      'name': 'Muhammad Noor Abizar',
       'role': 'System Analyst',
       'image': 'assets/team_member_9.png',
-      'github': 'https://github.com/indralesmana',
-      'instagram': 'https://instagram.com/indralesmana',
+      'github': 'https://github.com/mnabizar',
+      'instagram': 'https://instagram.com/mnabizar',
     },
   ];
 
