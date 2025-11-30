@@ -1,11 +1,12 @@
-# 🏠 bitArena: Cross Platform Dynamic Game Content Retrieval - Empowering Innovation, Transforming Digital Experiences
+# 🏠 bitArena: Cross Platform Dynamic Game Content Retrieval - 
+Empowering Innovation, Transforming Digital Experiences
 
 > ✨ Built with the tools and technologies: 
 
 ![Flutter](https://img.shields.io/badge/Flutter-3.x-blue?logo=flutter)
 ![json](https://img.shields.io/badge/Node.js-Express-green?logo=node.js)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-darkgreen?logo=mongodb)
-
+#000000
 ---
 
 ## 🧩 Tech Stack
