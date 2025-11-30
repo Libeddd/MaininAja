@@ -10,7 +10,7 @@ Empowering Innovation, Transforming Digital Experiences:
 
 ## 🛠️ Tech Stack
 
-<p align="left">
+<p align="center">
 
   <!-- JSON -->
   <img src="https://img.shields.io/badge/JSON-000000?style=for-the-badge&logo=json&logoColor=white"/>
