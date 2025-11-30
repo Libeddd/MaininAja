@@ -1,5 +1,5 @@
 <p align="center">
- 🏠 bitArena: Cross Platform Dynamic Game Content Retrieval
+# 🏠 bitArena: Cross Platform Dynamic Game Content Retrieval
 
 <p align="center">
 Empowering Innovation, Transforming Digital Experiences:
