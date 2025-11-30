@@ -39,11 +39,11 @@ class _AboutUsScreenState extends State<AboutUsScreen> {
       'instagram': 'https://instagram.com/gilangkelv',
     },
     {
-      'name': 'Dina Kusuma',
+      'name': 'muhammad nur thohir',
       'role': 'Lead Mobile Developer',
       'image': 'assets/team_member_4.png',
-      'github': 'https://github.com/dinakusuma',
-      'instagram': 'https://instagram.com/dinakusuma',
+      'github': 'https://github.com/draxel03',
+      'instagram': 'https://instagram.com/nrthohir',
     },
     {
       'name': 'Eko Prasetyo',
