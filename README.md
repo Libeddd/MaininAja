@@ -1,7 +1,6 @@
-<br>
+<p align="center">
  🏠 bitArena: Cross Platform Dynamic Game Content Retrieval
 
-<br>
 Empowering Innovation, Transforming Digital Experiences:
 
 > ✨ Built with the tools and technologies: 
@@ -10,7 +9,7 @@ Empowering Innovation, Transforming Digital Experiences:
 ![json](https://img.shields.io/badge/Node.js-Express-green?logo=node.js)
 ![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-darkgreen?logo=mongodb)
 
-<br>
+<p align="center">
 🛠️ Tech Stack
 
 <p align="center">
