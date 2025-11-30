@@ -4,11 +4,9 @@
 <p align="center">
 Empowering Innovation, Transforming Digital Experiences:
 
-<p align="center">
-✨ Built with the tools and technologies: 
 
 <p align="center">
-🛠️ Tech Stack
+✨ Built with the tools and technologies: 
 
 <p align="center">
 
